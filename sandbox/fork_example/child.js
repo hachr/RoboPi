@@ -10,5 +10,3 @@ process.on('message',function(msg){
 	}
 });
 
-//throw new Error("hello");
-
