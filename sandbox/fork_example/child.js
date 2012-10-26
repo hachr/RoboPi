@@ -5,6 +5,7 @@ process.on('message',function(msg){
 
 
 	if(msg['m']=='exit'){
+		process.send({o:'k'});
 		process.disconnect();
 	}
 });
