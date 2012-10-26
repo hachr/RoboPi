@@ -1,3 +1,13 @@
 console.log("this is from the child.js");
-throw new Error("hello");
+
+process.on('message',function(msg){
+	console.log("received from parent: " + msg['m']);
+
+
+	if(msg['m']=='exit'){
+		process.disconnect();
+	}
+});
+
+//throw new Error("hello");
 

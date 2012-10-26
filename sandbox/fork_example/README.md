@@ -1,7 +1,7 @@
 Illustrate fork logic.
 parent.js forked child.js and child.js keeps the process running.
 
-TODO:
-figure out how to properly end the child.js
-figure out how to communicate from child to parent.
+parent.js can send a message to child.
+
+child can exit its own process using process.disconnect();
 
