@@ -1,0 +1,17 @@
+{
+  "name": "serial",
+  "version": "0.0.0",
+  "description": "ERROR: No README.md file found!",
+  "main": "app.js",
+  "dependencies": {
+    "serial": "~0.0.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": "",
+  "author": "",
+  "license": "BSD"
+}
