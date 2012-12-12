@@ -39,13 +39,17 @@ Communication.prototype.init = function (options) {
         path:"/dev/ttyUSB0"
     };
 
+    var self = this;
+
     if (conf["emulator"]) {
         this.comm = conf["emulator"];
+        this.comm.receive = function (data) {
+            self.emit(EVENTS.DATA, data);
+        }
     } else {
-        this.serialPort = new SerialPort(conf.path, conf);
-        var that = this;
-        this.serialPort.on('data', function (data) {
-            that.emit(EVENTS.DATA, data);
+        this.comm = new SerialPort(conf.path, conf);
+        this.comm.on('data', function (data) {
+            self.emit(EVENTS.DATA, data);
         });
     }
 

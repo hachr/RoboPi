@@ -16,9 +16,13 @@
 var comm = require('./Communication');
 
 comm.on('initialized', function (config) {
-    console.log('init');
-    console.log(config);
+    console.log('init:' + JSON.stringify(config));
 });
+
+comm.on('data', function (data) {
+    console.log('data: ' + data);
+});
+
 
 var emulator = {
     write: function(data){
@@ -36,3 +40,4 @@ comm = comm.init({
 
 comm.send("hello");
 
+emulator.receive("this is data from the emulator");
