@@ -14,6 +14,9 @@
 
 
 var comm = require('./Communication');
+var Robo = require('./Robo');
+
+var robo = new Robo(comm);
 
 comm.on('initialized', function (config) {
     console.log('init:' + JSON.stringify(config));
@@ -22,7 +25,6 @@ comm.on('initialized', function (config) {
 comm.on('data', function (data) {
     console.log('data: ' + data);
 });
-
 
 var emulator = {
     write: function(data){
@@ -41,3 +43,8 @@ comm = comm.init({
 comm.send("hello");
 
 emulator.receive("this is data from the emulator");
+
+robo.turnOnLight();
+robo.turnOffLight();
+robo.turnOnLight();
+robo.turnOffLight();
