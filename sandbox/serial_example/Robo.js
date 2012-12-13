@@ -1,3 +1,4 @@
+//TODO: [high] (nhat) - inline all configuration and let robo initialize the connection.
 function Robo(comm) {
     this.comm = comm;
 }
@@ -30,4 +31,9 @@ Robo.prototype.sleep = function (interval, callback) {
     }
 };
 
+function factory(comm){
+    return new Robo(comm);
+}
+
 module.exports = Robo;
+module.exports.create = factory;
