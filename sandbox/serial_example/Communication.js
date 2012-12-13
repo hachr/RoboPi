@@ -22,7 +22,9 @@ util.inherits(Communication, EventEmitter);
 
 Communication.EVENTS = {
     INITIALIZED:"initialized",
-    DATA:"data"
+    DATA:"data",
+    CLOSE:"close",
+    OPEN:"open"
 };
 
 
@@ -51,6 +53,15 @@ Communication.prototype.init = function (options) {
         this.comm.on('data', function (data) {
             self.emit(EVENTS.DATA, data);
         });
+
+        this.comm.on('open', function (data) {
+            self.emit(EVENTS.OPEN, data);
+        });
+
+        this.comm.on('close', function (data) {
+            self.close();
+            self.emit(EVENTS.CLOSE, data);
+        });
     }
 
     //emit custom event
@@ -64,7 +75,14 @@ Communication.prototype.init = function (options) {
  */
 Communication.prototype.send = function (data) {
     //TODO: [high] (nhat) - assert comm is not null
-    this.comm.write(data);
+    this.comm.write(data + "\r");
+};
+
+/**
+ * close the connection
+ */
+Communication.prototype.close = function(){
+    this.comm.close();
 };
 
 

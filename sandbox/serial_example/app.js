@@ -33,18 +33,20 @@ var emulator = {
 };
 
 comm = comm.init({
-    baudrate:9600,
+    baudrate:115200,
     path:"/dev/ttyUSB0",
     //take out emulator to send direct to the serial port.
     emulator: emulator
 });
 
+//comm.send("hello");
+//emulator.receive("this is data from the emulator");
 
-comm.send("hello");
+comm.on("close", function(){
+    console.log("close");
+});
 
-emulator.receive("this is data from the emulator");
-
-robo.turnOnLight();
-robo.turnOffLight();
-robo.turnOnLight();
-robo.turnOffLight();
+comm.on("open", function(){
+    robo.turnOnLight();
+    comm.close();
+});
