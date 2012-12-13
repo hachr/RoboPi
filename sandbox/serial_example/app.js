@@ -1,18 +1,3 @@
-//var SerialPort = require('serialport').SerialPort;
-//
-//console.log(SerialPort);
-//
-//var serialPort = new SerialPort("/dev/ttyUSB0", {
-//    baudrate: 9600
-//  });
-//
-//serialPort.on('data', function (data) {
-//   console.log('on data: ' + data.toString());
-//});
-//
-//console.log('hello');
-
-
 var comm = require('./Communication');
 var Robo = require('./Robo');
 
@@ -28,6 +13,7 @@ comm.on('data', function (data) {
 
 comm.on("close", function () {
     console.log("close");
+    process.exit(0);
 });
 
 comm.on("open", function () {
@@ -35,6 +21,7 @@ comm.on("open", function () {
     robo.turnOnLight();
     robo.sleep(10, function () {
         robo.turnOffLight();
+        comm.close();
     });
 });
 

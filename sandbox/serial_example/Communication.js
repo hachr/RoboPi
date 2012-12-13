@@ -69,7 +69,6 @@ Communication.prototype.init = function (options) {
         });
 
         this.comm.on('close', function (data) {
-            self.close();
             self.emit(EVENTS.CLOSE, data);
         });
     }
