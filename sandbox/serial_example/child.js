@@ -1,29 +1,32 @@
-var comm = require('./Communication');
-var robo = require('./Robo').create(comm);
+var callback = {
+    onReceived:function (robo, data) {
+        console.log("onReceived: " + data);
+    },
+    onClosed:function (robo, err) {
+        console.log("onClosed");
+    },
+    onOpened:function (robo, err) {
+        console.log("onOpened");
+        robo.turnOnLight();
+        robo.sleep(10, function () {
+            robo.turnOffLight();
+            robo.shutdown();
+        });
+    }
+};
 
-comm.on('initialized', function (config) {
-    console.log('init:' + JSON.stringify(config));
-});
+var emulating = true;
+var emulator = null;
 
-comm.on('data', function (data) {
-    console.log('data: ' + data);
-});
+if (emulating) {
+    emulator = {
+        write:function (data) {
+            console.log("writing to emulator: " + data);
+        }
+    };
+}
 
-comm.on("close", function () {
-    console.log("close");
-    process.exit(0);
-});
-
-comm.on("open", function () {
-    console.log("open");
-    robo.turnOnLight();
-    robo.sleep(10, function () {
-        robo.turnOffLight();
-        comm.close();
-    });
-});
-
-comm = comm.init({
+require('./Robo').create({
     baudrate:115200,
-    path:"/dev/ttyUSB0"
-});
+    path:"/dev/ttyUSB0",
+    emulator:emulator}, callback);

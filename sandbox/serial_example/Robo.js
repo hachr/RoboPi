@@ -1,10 +1,20 @@
-//TODO: [high] (nhat) - inline all configuration and let robo initialize the connection.
-function Robo(comm) {
+function Robo(conf, callback) {
+    var comm = require("./Communication");
     this.comm = comm;
-}
+    var self = this;
+    comm.on('data', function (data) {
+        callback.onReceived.call(this, self, data);
+    });
 
-function noop() {
-    //no-op
+    comm.on('open', function (err) {
+        callback.onOpened.call(this, self, err);
+    });
+
+    comm.on('close', function (err) {
+        callback.onClosed.call(this, self, err);
+    });
+
+    comm.init(conf);
 }
 
 Robo.prototype.turnOnLight = function () {
@@ -15,6 +25,11 @@ Robo.prototype.turnOnLight = function () {
 Robo.prototype.turnOffLight = function () {
     //TODO: [high] (nhat) - have a better way of constructing the command or translation
     this.comm.send("0");
+};
+
+
+Robo.prototype.shutdown = function(){
+    this.comm.close();
 };
 
 /**
@@ -31,8 +46,8 @@ Robo.prototype.sleep = function (interval, callback) {
     }
 };
 
-function factory(comm){
-    return new Robo(comm);
+function factory(configuration, callback) {
+    return new Robo(configuration, callback);
 }
 
 module.exports = Robo;
