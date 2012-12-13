@@ -26,27 +26,37 @@ comm.on('data', function (data) {
     console.log('data: ' + data);
 });
 
+comm.on("close", function () {
+    console.log("close");
+});
+
+comm.on("open", function () {
+    console.log("open");
+    robo.turnOnLight();
+    robo.sleep(10, function () {
+        robo.turnOffLight();
+    });
+});
+
 var emulator = {
-    write: function(data){
+    write:function (data) {
         console.log("writing to emulator: " + data);
     }
 };
+
+
+var emulating = true;
 
 comm = comm.init({
     baudrate:115200,
     path:"/dev/ttyUSB0",
     //take out emulator to send direct to the serial port.
-    emulator: emulator
+    emulator:emulating ? emulator : null
 });
 
-//comm.send("hello");
-//emulator.receive("this is data from the emulator");
+if (emulating) {
+    comm.send("hello");
+    emulator.receive("this is data from the emulator");
+}
 
-comm.on("close", function(){
-    console.log("close");
-});
 
-comm.on("open", function(){
-    robo.turnOnLight();
-    comm.close();
-});

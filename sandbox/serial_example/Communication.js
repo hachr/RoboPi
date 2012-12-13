@@ -45,6 +45,16 @@ Communication.prototype.init = function (options) {
 
     if (conf["emulator"]) {
         this.comm = conf["emulator"];
+
+        //emulate open
+        self.emit(EVENTS.OPEN);
+
+        //emulate close
+        this.comm.close = function(){
+            self.emit(EVENTS.CLOSE);
+        };
+
+        //emulate receive
         this.comm.receive = function (data) {
             self.emit(EVENTS.DATA, data);
         }
