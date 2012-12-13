@@ -40,11 +40,25 @@ Robo.prototype.shutdown = function(){
  */
 Robo.prototype.sleep = function (interval, callback) {
     if (interval) {
+    	if(callback){
         setTimeout(function () {
             callback();
         }, interval);
+        }else{
+        	busyWait(interval);
+        }
     }
 };
+
+/**
+ * this will spin the CPU, which is really bad.
+ */
+function busyWait(interval){
+	var date = new Date();
+	var curDate = null;
+	do { curDate = new Date(); }
+	while(curDate-date < interval);
+}
 
 function factory(configuration, callback) {
     return new Robo(configuration, callback);
