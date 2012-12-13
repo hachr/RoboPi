@@ -11,6 +11,9 @@ var callback = {
         robo.sleep(10, function () {
             robo.turnOffLight();
             robo.shutdown();
+
+            //end the child process.
+            process.exit(0);
         });
     }
 };
