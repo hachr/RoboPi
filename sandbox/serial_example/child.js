@@ -13,7 +13,7 @@ var callback = {
             robo.shutdown();
 
             //end the child process.
-            process.exit(0);
+            process.disconnect();
         });
     }
 };
