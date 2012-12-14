@@ -8,17 +8,14 @@ var callback = {
     onOpened:function (robo, err) {
         console.log("onOpened");
         robo.turnOnLight();
-        robo.sleep(10, function () {
-            robo.turnOffLight();
-            robo.shutdown();
+        robo.shutdown();
 
-            //end the child process.
-            if(process.disconnect){
-                process.disconnect();
-            }else{
-                process.exit();
-            }
-        });
+        //end the child process.
+        if (process.disconnect) {
+            process.disconnect();
+        } else {
+            process.exit();
+        }
     }
 };
 
