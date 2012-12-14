@@ -10,39 +10,48 @@ var callback = {
     onOpened:function (robo, err) {
         console.log("start sending out morse code...");
         doit(robo);
-        robo.shutdown();
-            //end the child process.
-            if(process.disconnect){
-                process.disconnect();
-            }else{
-                process.exit();
-            }
     }
 };
 
 var morse = {};
 morse["s"] = [1,0,1,0,1,0]; //3 short
 morse["o"] = [1,1,0,1,1,0,1,1,0]; //3 long
+morse[" "] = [0,0]; // space
 
 function doit(robo){
-	var message = "sos";
+	var message = " s o s ";
+    var morseMessage = [];
 	for(var i=0;i<100;i++){ //send 100 times
 		for(var j=0;j<message.length;j++){
 			var letter = message[j];
-			sendMorse(robo, morse[letter]);
+            morseMessage = morseMessage.concat(morse[letter]);
 		}
 	}
+
+    sendMorse(robo, morseMessage);
 }
 
 function sendMorse(robo, array){
-	for(var i=0;i<array.length;i++){
-		if(array[i]){
-			robo.turnOnLight();
-		}else{
-			robo.turnOffLight();
-		}
-		robo.sleep(500);
-	}
+    if (array.length > 0) {
+        if(array[0]){
+            //console.log("on");
+            robo.turnOnLight();
+        } else{
+            //console.log("off");
+            robo.turnOffLight();
+        }
+        setTimeout(function(){
+            sendMorse(robo, array.slice(1, array.length));
+        }, 500);
+    } else {
+        robo.shutdown();
+        //end the child process.
+        if(process.disconnect){
+            process.disconnect();
+        }else{
+            process.exit();
+        }
+    }
 }
 
 var emulating = false;
