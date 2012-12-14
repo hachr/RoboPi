@@ -13,6 +13,10 @@ function Robo(conf, callback) {
     comm.on('close', function (err) {
         callback.onClosed.call(this, self, err);
     });
+    
+    comm.on('sent', function(){
+    	callback.onSent.call(this,self);
+    });
 
     comm.init(conf);
 }
@@ -31,34 +35,6 @@ Robo.prototype.turnOffLight = function () {
 Robo.prototype.shutdown = function(){
     this.comm.close();
 };
-
-/**
- * //TODO: [high] (nhat) - consider using step library to chain the callback.
- * utility, just idle for x amount of millis
- * @param {Number} interval
- * @param {Function} callback
- */
-Robo.prototype.sleep = function (interval, callback) {
-    if (interval) {
-    	if(callback){
-        setTimeout(function () {
-            callback();
-        }, interval);
-        }else{
-        	busyWait(interval);
-        }
-    }
-};
-
-/**
- * this will spin the CPU, which is really bad.
- */
-function busyWait(interval){
-	var date = new Date();
-	var curDate = null;
-	do { curDate = new Date(); }
-	while(curDate-date < interval);
-}
 
 function factory(configuration, callback) {
     return new Robo(configuration, callback);

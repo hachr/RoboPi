@@ -24,7 +24,8 @@ Communication.EVENTS = {
     INITIALIZED:"initialized",
     DATA:"data",
     CLOSE:"close",
-    OPEN:"open"
+    OPEN:"open",
+    SENT: "sent"
 };
 
 
@@ -41,23 +42,41 @@ Communication.prototype.init = function (options) {
         path:"/dev/ttyUSB0"
     };
 
+	//default delay after sent
+	this.delay = options.delay || 500;
+	
     var self = this;
 
     if (conf["emulator"]) {
         this.comm = conf["emulator"];
 
-        //emulate open
-        self.emit(EVENTS.OPEN);
-
         //emulate close
         this.comm.close = function(){
             self.emit(EVENTS.CLOSE);
         };
+	
+		//emulate flush
+		this.comm.flush = function(){
+		};
+
+		var old = null;
+		if(this.comm.write){
+			old = this.comm.write;			
+		}
+
+		this.comm.write = function(data){
+			if(old){
+				old(data);
+			};
+			self.comm.flush();
+		};
 
         //emulate receive
         this.comm.receive = function (data) {
             self.emit(EVENTS.DATA, data);
-        }
+        };
+		 //emulate open
+        self.emit(EVENTS.OPEN);        
     } else {
         this.comm = new SerialPort(conf.path, conf);
         this.comm.on('data', function (data) {
@@ -82,9 +101,15 @@ Communication.prototype.init = function (options) {
  *
  * @param {string} data
  */
-Communication.prototype.send = function (data) {
+Communication.prototype.send = function (data, delay) {
     //TODO: [high] (nhat) - assert comm is not null
     this.comm.write(data + "\r");
+    this.comm.flush();
+    var sendDelay = delay || this.delay;
+    var self = this;
+    setTimeout(function(){
+    	self.emit(EVENTS.SENT);
+    }, sendDelay);
 };
 
 /**
