@@ -1,0 +1,3 @@
+#!/bin/bash
+
+node /Users/jross/git-workspace/RoboPi/sandbox/serial_example/morse.js
